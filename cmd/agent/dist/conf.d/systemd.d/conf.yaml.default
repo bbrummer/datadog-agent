@@ -1,0 +1,10 @@
+init_config:
+
+instances:
+  - unit_names:
+     - ssh.service
+     - docker.service
+     - syslog.socket
+    unit_regex:
+     - lvm2-.*
+     - cloud-.*
