@@ -64,50 +64,37 @@ func (d ConnectionDirection) String() string {
 }
 
 // Connections wraps a collection of ConnectionStats
-//easyjson:json
 type Connections struct {
-	Conns []ConnectionStats `json:"connections"`
+	Conns []ConnectionStats
 }
 
 // ConnectionStats stores statistics for a single connection.  Field order in the struct should be 8-byte aligned
-//easyjson:json
 type ConnectionStats struct {
 	// Source & Dest represented as a string to handle both IPv4 & IPv6
-	// Note: As ebpf.Address is an interface, we need to use interface{} for easyjson
-	Source interface{} `json:"source,string"`
-	Dest   interface{} `json:"dest,string"`
+	Source util.Address
+	Dest   util.Address
 
-	MonotonicSentBytes uint64 `json:"monotonic_sent_bytes"`
-	LastSentBytes      uint64 `json:"last_sent_bytes"`
+	MonotonicSentBytes uint64
+	LastSentBytes      uint64
 
-	MonotonicRecvBytes uint64 `json:"monotonic_recv_bytes"`
-	LastRecvBytes      uint64 `json:"last_recv_bytes"`
+	MonotonicRecvBytes uint64
+	LastRecvBytes      uint64
 
 	// Last time the stats for this connection were updated
-	LastUpdateEpoch uint64 `json:"last_update_epoch"`
+	LastUpdateEpoch uint64
 
-	MonotonicRetransmits uint32 `json:"monotonic_retransmits"`
-	LastRetransmits      uint32 `json:"last_retransmits"`
+	MonotonicRetransmits uint32
+	LastRetransmits      uint32
 
-	Pid   uint32 `json:"pid"`
-	NetNS uint32 `json:"net_ns"`
+	Pid   uint32
+	NetNS uint32
 
-	SPort         uint16                 `json:"sport"`
-	DPort         uint16                 `json:"dport"`
-	Type          ConnectionType         `json:"type"`
-	Family        ConnectionFamily       `json:"family"`
-	Direction     ConnectionDirection    `json:"direction"`
-	IPTranslation *netlink.IPTranslation `json:"conntrack"`
-}
-
-// SourceAddr returns the source address in the Address abstraction
-func (c ConnectionStats) SourceAddr() util.Address {
-	return c.Source.(util.Address)
-}
-
-// DestAddr returns the dest address in the Address abstraction
-func (c ConnectionStats) DestAddr() util.Address {
-	return c.Dest.(util.Address)
+	SPort         uint16
+	DPort         uint16
+	Type          ConnectionType
+	Family        ConnectionFamily
+	Direction     ConnectionDirection
+	IPTranslation *netlink.IPTranslation
 }
 
 func (c ConnectionStats) String() string {
@@ -150,11 +137,11 @@ func (c ConnectionStats) ByteKey(buffer *bytes.Buffer) ([]byte, error) {
 		return nil, err
 	}
 
-	if _, err := buffer.Write(c.SourceAddr().Bytes()); err != nil {
+	if _, err := buffer.Write(c.Source.Bytes()); err != nil {
 		return nil, err
 	}
 
-	if _, err := buffer.Write(c.DestAddr().Bytes()); err != nil {
+	if _, err := buffer.Write(c.Dest.Bytes()); err != nil {
 		return nil, err
 	}
 
