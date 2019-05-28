@@ -1,6 +1,7 @@
 init_config:
 
 instances:
+    -
     ## If the number of units managed by systemd is unbounded, those it might infinitely 
     ## increase the number of metrics for your organization, they might be considered as custom metrics
     ## and impact your billing. 
@@ -10,14 +11,14 @@ instances:
     ## List of systemd unit to monitor (full name e.g. ssh.service).
     ## If unit_names and unit_regex are both NOT specified, the check will monitor all units.
     #
-    # - unit_name:
+    # unit_name:
     #   - <UNIT_NAME>
 
     ## @param unit_regex - list of strings - optional
     ## Regex pattern[s] matching the names of processes to monitor.
     ## If unit_names and unit_regex are both NOT specified, the check will monitor all units.
     #
-    # - unit_regex:
+    # unit_regex:
     #   - <UNIT_NAME>          # match any unit name containing "unit_name"
     #   - ^<UNIT_NAME>$        # match exactly the unit name "unit_name"
     #   - ^<PREFIX>            # match unit name with prefix "prefix-"

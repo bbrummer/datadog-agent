@@ -593,6 +593,26 @@ unit_regex:
 	}
 }
 
+func TestIsMonitoredEmptyConfigMonitorAll(t *testing.T) {
+	// setup data
+	rawInstanceConfig := []byte(``)
+	check := Check{}
+	check.Configure(rawInstanceConfig, nil)
+
+	data := []struct {
+		unitName              string
+		expectedToBeMonitored bool
+	}{
+		{"unit1.service", true},
+		{"xyz.socket", true},
+	}
+	for _, d := range data {
+		t.Run(fmt.Sprintf("check.isMonitored('%s') expected to be %v", d.unitName, d.expectedToBeMonitored), func(t *testing.T) {
+			assert.Equal(t, d.expectedToBeMonitored, check.isMonitored(d.unitName))
+		})
+	}
+}
+
 func TestComputeUptime(t *testing.T) {
 	data := map[string]struct {
 		activeState     string

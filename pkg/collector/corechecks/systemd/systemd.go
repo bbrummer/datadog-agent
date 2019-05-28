@@ -338,7 +338,11 @@ func getServiceCheckStatus(activeState string) metrics.ServiceCheckStatus {
 	return metrics.ServiceCheckUnknown
 }
 
+// isMonitored verifies if a unit should be monitored.
 func (c *Check) isMonitored(unitName string) bool {
+	if len(c.config.instance.UnitNames) == 0 && len(c.config.instance.UnitRegexPatterns) == 0 {
+		return true
+	}
 	for _, name := range c.config.instance.UnitNames {
 		if name == unitName {
 			return true
