@@ -196,12 +196,15 @@ func (c *Check) submitUnitMetrics(sender aggregator.Sender, conn *dbus.Conn) err
 		if !c.isMonitored(unit.Name) {
 			continue
 		}
-		tags := []string{
+
+		monitoredTags := []string{
 			unitTag + ":" + unit.Name,
 			unitActiveStateTag + ":" + unit.ActiveState,
 			unitSubStateTag + ":" + unit.SubState,
 		}
-		sender.Gauge("systemd.unit.monitored", 1, "", tags)
+		sender.Gauge("systemd.unit.monitored", 1, "", monitoredTags)
+
+		tags := []string{unitTag + ":" + unit.Name}
 		sender.ServiceCheck("systemd.unit.status", getServiceCheckStatus(unit.ActiveState), "", tags, "")
 		c.submitMonitoredUnitMetrics(sender, conn, unit, tags)
 
